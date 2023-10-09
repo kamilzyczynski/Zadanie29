@@ -75,5 +75,5 @@ public class User {
                 .filter(role -> role == Role.ROLE_ADMIN)
                 .toList();
         return !adminRole.isEmpty();
-}
+    }
 }
