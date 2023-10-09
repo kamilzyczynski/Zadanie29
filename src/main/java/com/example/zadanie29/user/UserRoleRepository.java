@@ -2,6 +2,8 @@ package com.example.zadanie29.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRoleRepository extends JpaRepository<UserRole, Long> {
+import java.util.Optional;
 
+public interface UserRoleRepository extends JpaRepository<UserRole, Long> {
+    Optional<UserRole> findByUserId(Long id);
 }

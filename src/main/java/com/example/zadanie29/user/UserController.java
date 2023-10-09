@@ -15,13 +15,19 @@ public class UserController {
 
     @GetMapping("/updateUser")
     public String showUpdateForm(Model model) {
-        model.addAttribute("user", new UpdateUserDto());
+        model.addAttribute("user", userService.getUserToUpdate());
         return "updateForm";
     }
 
-    @PostMapping("/updateUser")
-    public String update(UpdateUserDto userDto) {
-        userService.updateUser(userDto);
+    @PostMapping("/updateUserData")
+    public String updateData(UpdateUserDto userDto) {
+        userService.updateUserData(userDto);
+        return "redirect:/";
+    }
+
+    @PostMapping("/updateUserPassword")
+    public String updatePassword(UpdateUserDto userDto) {
+        userService.updateUserPassword(userDto);
         return "redirect:/";
     }
 }

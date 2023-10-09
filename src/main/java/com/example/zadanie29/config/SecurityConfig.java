@@ -28,6 +28,9 @@ public class SecurityConfig {
         http.csrf().ignoringRequestMatchers(toH2Console());
         http.formLogin(login -> login.loginPage("/login").permitAll());
         http.headers().frameOptions().sameOrigin();
+        http.logout()
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
+                .logoutSuccessUrl("/");
         return http.build();
     }
 

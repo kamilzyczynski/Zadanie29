@@ -3,7 +3,6 @@ package com.example.zadanie29.user;
 public class UpdateUserDto {
     private String firstName;
     private String lastName;
-
     private String password;
 
     public String getFirstName() {

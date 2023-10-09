@@ -2,7 +2,9 @@ package com.example.zadanie29.user;
 
 import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "application_user")
@@ -14,6 +16,7 @@ public class User {
     private String firstName;
     private String lastName;
     private String password;
+
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private Set<UserRole> roles;
 
@@ -64,4 +67,13 @@ public class User {
     public void setRoles(Set<UserRole> roles) {
         this.roles = roles;
     }
+
+    public boolean isAdmin() {
+        List<Role> adminRole = roles
+                .stream()
+                .map(UserRole::getRole)
+                .filter(role -> role == Role.ROLE_ADMIN)
+                .toList();
+        return !adminRole.isEmpty();
+}
 }

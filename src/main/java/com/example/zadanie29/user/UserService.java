@@ -5,6 +5,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -41,21 +42,60 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public void updateUser(UpdateUserDto userDto) {
-        Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+    public boolean checkIfAdmin(Long id) {
+        Optional<User> optionalUser = userRepository.findById(id);
+        List<Role> adminRole = new ArrayList<>();
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            adminRole = user.getRoles()
+                    .stream()
+                    .map(UserRole::getRole)
+                    .filter(role -> role == Role.ROLE_ADMIN)
+                    .collect(Collectors.toList());
+        }
+        return !adminRole.isEmpty();
+    }
 
-        Optional<User> userOptional = userRepository.findByUsername(currentUser.getName());
+    public UpdateUserDto getUserToUpdate() {
+        Optional<User> userOptional = getCurrentUser();
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            UpdateUserDto updateUserDto = new UpdateUserDto();
+            updateUserDto.setFirstName(user.getFirstName());
+            updateUserDto.setLastName(user.getLastName());
+            updateUserDto.setPassword(user.getPassword());
+            return updateUserDto;
+        } else {
+            throw new UsernameNotFoundException("User not found.");
+        }
+    }
+
+    public void updateUserData(UpdateUserDto userDto) {
+        Optional<User> userOptional = getCurrentUser();
+
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             user.setFirstName(userDto.getFirstName());
             user.setLastName(userDto.getLastName());
-            if (userDto.getPassword() != null) {
-                String encodedPassword = passwordEncoder.encode(user.getPassword());
-                user.setPassword(encodedPassword);
-            }
+
             userRepository.save(user);
         } else {
             throw new UsernameNotFoundException("Username not found.");
+        }
+    }
+
+    public void updateUserPassword(UpdateUserDto userDto) {
+        Optional<User> userOptional = getCurrentUser();
+
+        if (userDto.getPassword() != null) {
+            if (userOptional.isPresent()) {
+                User user = userOptional.get();
+
+                String encodedPassword = passwordEncoder.encode(user.getPassword());
+                user.setPassword(encodedPassword);
+                userRepository.save(user);
+            }
         }
     }
 
@@ -63,16 +103,31 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    public void editUser(EditUserDto editUserDto) {
-        Optional<User> optionalUser = userRepository.findById(editUserDto.getId());
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            Set<UserRole> userRoles = editUserDto.getRoles()
-                    .stream()
-                    .map(role -> new UserRole(user, role))
-                    .collect(Collectors.toSet());
-            user.setRoles(userRoles);
-            userRepository.save(user);
+    public Optional<User> getCurrentUser() {
+        Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+
+        return userRepository.findByUsername(currentUser.getName());
+    }
+
+    @Transactional
+    public void addAdmin(Long id) {
+        Optional<UserRole> userRoleOptional = userRoleRepository.findByUserId(id);
+        if (userRoleOptional.isPresent()) {
+            UserRole userRole = userRoleOptional.get();
+
+            userRole.setRole(Role.ROLE_ADMIN);
+            userRoleRepository.save(userRole);
+        }
+    }
+
+    @Transactional
+    public void removeAdmin(Long id) {
+        Optional<UserRole> userRoleOptional = userRoleRepository.findByUserId(id);
+        if (userRoleOptional.isPresent()) {
+            UserRole userRole = userRoleOptional.get();
+
+            userRole.setRole(Role.ROLE_USER);
+            userRoleRepository.save(userRole);
         }
     }
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<html lang="pl" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <meta charset="UTF-8">
     <title>Strona główna</title>
@@ -9,10 +9,11 @@
 <div class="container">
 <h1>Witaj na stronie głównej</h1>
 
-<a th:href="@{/register}">Zarejestruj się</a></br>
-<a th:href="@{/login}">Zaloguj się</a></br>
+<a sec:authorize="!isAuthenticated()" th:href="@{/register}">Zarejestruj się</a></br>
+<a sec:authorize="!isAuthenticated()" th:href="@{/login}">Zaloguj się</a></br>
+<a sec:authorize="isAuthenticated()" th:href="@{/logout}">Wyloguj się</a></br>
 <a th:href="@{/updateUser}">Zaktualizuj dane</a></br></br>
-<a th:href="@{/admin}">Panel administratora</a>
+<a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/admin}">Panel administratora</a>
 </div>
 </body>
 </html>
