@@ -1,4 +1,4 @@
-package com.example.zadanie29;
+package com.example.zadanie29.web;
 
 import com.example.zadanie29.user.RegisterUserDto;
 import com.example.zadanie29.user.UserService;

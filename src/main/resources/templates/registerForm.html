@@ -8,10 +8,10 @@
           integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
           crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
-        .login-form {
+        .body {
             display: flex;
             flex-direction: column;
-            margin-top: 32px;
+            margin-top: 22px;
             align-items: center;
         }
         .user-icon {
@@ -29,7 +29,9 @@
 <body>
 <div class="container">
     <h2>Zarejestruj się</h2>
+    <div class="body">
     <i class="fa-solid fa-user fa-8x user-icon"></i>
+        </br>
 <form class="login-form" th:action="@{/register}" method="post" th:object="${user}">
     <div class="mb-3">
         <input type="text" th:field="*{username}" class="form-control" placeholder="Nazwa użytkownika">
@@ -41,6 +43,9 @@
         <button class="btn btn-primary" type="submit" >Zarejestruj się</button>
     </div>
 </form>
+    </br>
+    <a th:href="@{/}">Powrót do strony głównej</a></br>
+    </div>
 </div>
 </body>
 </html>

@@ -26,10 +26,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            Set<SimpleGrantedAuthority> roles = user.getRoles()
-                    .stream()
-                    .map(userRole -> new SimpleGrantedAuthority(userRole.getRole().name()))
-                    .collect(Collectors.toSet());
+            Set<SimpleGrantedAuthority> roles = Set.of(new SimpleGrantedAuthority(user.getRole().name()));
 
             return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), roles);
         }

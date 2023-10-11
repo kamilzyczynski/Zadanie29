@@ -16,9 +16,8 @@ public class User {
     private String firstName;
     private String lastName;
     private String password;
-
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private Set<UserRole> roles;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     public Long getId() {
         return id;
@@ -60,20 +59,15 @@ public class User {
         this.password = password;
     }
 
-    public Set<UserRole> getRoles() {
-        return roles;
+    public Role getRole() {
+        return role;
     }
 
-    public void setRoles(Set<UserRole> roles) {
-        this.roles = roles;
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public boolean isAdmin() {
-        List<Role> adminRole = roles
-                .stream()
-                .map(UserRole::getRole)
-                .filter(role -> role == Role.ROLE_ADMIN)
-                .toList();
-        return !adminRole.isEmpty();
+        return role == Role.ROLE_ADMIN;
     }
 }

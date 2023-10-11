@@ -9,7 +9,7 @@
           integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <style>
-        .login-form {
+        .body {
             display: flex;
             flex-direction: column;
             margin-top: 32px;
@@ -27,6 +27,7 @@
 <body>
 <div class="container">
     <h2>Zaktualizuj swoje dane</h2>
+    <div class="body">
     <form class="login-form" th:action="@{/updateUserData}" th:object="${user}" method="post">
         <div class="mb-3">
             <input type="text" th:field="*{firstName}" class="form-control" placeholder="Imię" required>
@@ -38,15 +39,19 @@
             <button class="btn btn-primary" type="submit">Zaktualizuj dane</button>
         </div>
     </form>
-    <form class="login-form" th:action="@{/updateUserPassword}" th:object="${user}" method="post">
+        </br>
+    <form class="login-form" th:action="@{/updateUserPassword}" method="post">
         <div class="mb-3">
             <label for="password" class="form-label">Zmień hasło</label>
-            <input type="password" th:field="*{password}" id="password" class="form-control">
+            <input type="password" name="password" id="password" class="form-control">
         </div>
         <div class="submit-button">
             <button class="btn btn-primary" type="submit">Zmień hasło</button>
         </div>
     </form>
+    </br>
+    <a th:href="@{/}">Powrót do strony głównej</a></br>
+    </div>
 </div>
 </body>
 </html>

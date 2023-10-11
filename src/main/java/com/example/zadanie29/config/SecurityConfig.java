@@ -3,6 +3,7 @@ package com.example.zadanie29.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -25,12 +26,19 @@ public class SecurityConfig {
                 .requestMatchers(mvcMatcherBuilder.pattern("/register")).permitAll()
                 .requestMatchers(mvcMatcherBuilder.pattern("/admin/**")).hasRole("ADMIN")
                 .anyRequest().authenticated());
-        http.csrf().ignoringRequestMatchers(toH2Console());
+        http.csrf(config -> config.ignoringRequestMatchers(toH2Console()));
         http.formLogin(login -> login.loginPage("/login").permitAll());
-        http.headers().frameOptions().sameOrigin();
-        http.logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
-                .logoutSuccessUrl("/");
+        http.headers(
+                config -> config.frameOptions(
+                        HeadersConfigurer.FrameOptionsConfig::sameOrigin
+                )
+        );
+        http.logout(
+                config -> {
+                    config.logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"));
+                    config.logoutSuccessUrl("/");
+                }
+        );
         return http.build();
     }
 

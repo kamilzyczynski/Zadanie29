@@ -8,7 +8,7 @@
           integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
           crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
-        .login-form {
+        .body {
             display: flex;
             flex-direction: column;
             margin-top: 32px;
@@ -34,6 +34,7 @@
 <body>
 <div class="container">
     <h2>Zaloguj się</h2>
+    <div class="body">
     <i class="fa-solid fa-user fa-8x user-icon"></i></br>
     <p th:if="${registrationSuccess}" class="success-message"> Konto utworzone pomyślnie!</p>
 <form class="login-form" th:action="@{/login}" method="post">
@@ -47,6 +48,9 @@
         <button class="btn btn-primary" type="submit" >Zaloguj się</button>
     </div>
 </form>
+    </br>
+    <a th:href="@{/}">Powrót do strony głównej</a></br>
+    </div>
 </div>
 </body>
 </html>

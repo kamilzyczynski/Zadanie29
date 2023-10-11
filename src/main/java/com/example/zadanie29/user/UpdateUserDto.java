@@ -3,7 +3,6 @@ package com.example.zadanie29.user;
 public class UpdateUserDto {
     private String firstName;
     private String lastName;
-    private String password;
 
     public String getFirstName() {
         return firstName;
@@ -21,11 +20,4 @@ public class UpdateUserDto {
         this.lastName = lastName;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }
